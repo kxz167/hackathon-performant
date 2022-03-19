@@ -172,10 +172,12 @@ def create_app(test_config=None):
             # print(type(candle["datetime"]))
             # print(sys_date.fromtimestamp(candle["datetime"]/1000))
 
+            tot_val = curr_close * curr_quantity
+
             print(f"DATE: {curr_date}, Quantity: {curr_quantity}, PL: {curr_pl}, PL%: {curr_pl_per}")
 
             cur = conn.cursor()
-            cur.execute(f"INSERT INTO position_transaction_history (account_uuid, date, ticker, quantity, pl, plp) VALUES (\'{account_uuid}\', \'{curr_date}\', \'{ticker}\', {curr_quantity}, {curr_pl}, {curr_pl_per}) ON CONFLICT ON CONSTRAINT position_transaction_history_pkey DO UPDATE SET quantity = EXCLUDED.quantity, pl = EXCLUDED.pl, plp = EXCLUDED.plp;")
+            cur.execute(f"INSERT INTO position_transaction_history (account_uuid, date, ticker, quantity, pl, plp, tot_value) VALUES (\'{account_uuid}\', \'{curr_date}\', \'{ticker}\', {curr_quantity}, {curr_pl}, {curr_pl_per}, {tot_val}) ON CONFLICT ON CONSTRAINT position_transaction_history_pkey DO UPDATE SET quantity = EXCLUDED.quantity, pl = EXCLUDED.pl, plp = EXCLUDED.plp, tot_value = EXCLUDED.tot_value;")
             conn.commit()
 
             print(candle)
@@ -213,6 +215,8 @@ def create_app(test_config=None):
         tickers = cur.fetchall()
         # print(acconts)
         return {"tickers": tickers}
+    # =================================================
+    # 
 
     return app
 

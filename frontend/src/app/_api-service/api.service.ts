@@ -33,4 +33,8 @@ export class ApiService {
   getPositionTicks(){
     return this.http.get(environment.apiUrl + "/position/ticks")
   }
+
+  getInvestmentValue(){
+    
+  }
 }

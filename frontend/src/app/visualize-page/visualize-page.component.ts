@@ -16,7 +16,19 @@ export class VisualizePageComponent implements OnInit {
     quantity: ['']
   });
 
+  accOptForm = this.fb.group({
+    dep_bal: [''],
+    inv_val: [''],
+    avail_funds: [''],
+    ov_pl: [''],
+  });
+
   tickerForm = new FormControl('');
+
+  updateAccGraphSeries(){
+
+  }
+  acc_graphs: any;
 
   updateGraphSeries(){
     if(this.tickerForm.value){
@@ -73,7 +85,7 @@ export class VisualizePageComponent implements OnInit {
   }
 
 
-  visAccount = false;
+  visAccount = true;
 
   constructor(
     private apiService:ApiService,
