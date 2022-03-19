@@ -6,6 +6,7 @@ import psycopg2
 
 #Flask
 from flask import Flask
+from flask_cors import CORS, cross_origin
 
 #API Requests
 from .tda_requester import price_history
@@ -19,10 +20,13 @@ def create_app(test_config=None):
 
     #Setup flask
     app = Flask(__name__, instance_relative_config=True)
+    cors = CORS(app)
     app.config.from_mapping(
         SECRET_KEY='dev', #'dev' should be replaced with a value at launch
         # DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite') # WE DO NOT NEED A DATABASE
     )
+
+    app.config['CORS_HEADERS'] = 'Content-type'
 
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
@@ -56,6 +60,12 @@ def create_app(test_config=None):
         
         return {"candles": candles}
     
-    
-
+    @app.route('/account/get-accounts')
+    @cross_origin()
+    def get_accounts():
+        cur = conn.cursor()
+        cur.execute('SELECT uuid, name, description FROM account;')
+        accounts = cur.fetchall()
+        # print(acconts)
+        return {"accounts": accounts}
     return app
