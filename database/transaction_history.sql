@@ -45,4 +45,8 @@ SELECT
 			FROM (SELECT date AS name, quantity AS value ORDER BY date) AS x)
 	) AS quantity
 FROM position_transaction_history
+WHERE ticker = 'NVDA'
 GROUP BY ticker
+
+-- Get tickers:
+SELECT  ticker FROM position_transaction_history GROUP BY ticker;

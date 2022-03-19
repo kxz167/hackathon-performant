@@ -27,7 +27,7 @@ export class ApiService {
   }
 
   getPositionGraphData(ticker:any){
-    return this.http.get(environment.apiUrl + "/position/graph-data", ticker)
+    return this.http.post(environment.apiUrl + "/position/graph-data", ticker)
   }
 
   getPositionTicks(){

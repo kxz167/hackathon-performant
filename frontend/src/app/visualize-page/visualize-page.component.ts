@@ -39,7 +39,7 @@ export class VisualizePageComponent implements OnInit {
   }
 
   getSymbolGraphInfo(event:any){
-    console.warn(this.tickerForm.value);
+    console.warn(this.tickerForm.value, );
     if(this.tickerForm.value){
       this.apiService.getPositionGraphData({'ticker': this.tickerForm.value}).subscribe(
         (response: any) => {
@@ -65,7 +65,8 @@ export class VisualizePageComponent implements OnInit {
             "series": all_data[3].map(this.dateParser)
           };
           this.seriesDict["quantity"] = this.pgd_quantity;
-  
+          
+          this.updateGraphSeries();
         }
       );
     }

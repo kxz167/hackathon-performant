@@ -148,7 +148,9 @@ def create_app(test_config=None):
 
         #Run through all the necessary days:
         updated_history = []
-        prev_pl = float(prev_history[0])
+        prev_pl = 0
+        if(prev_history is not None):
+           prev_pl = float(prev_history[0])
         print(ticker_history[0])
         for i in range(1,len(ticker_history[1:])):
             print("==============")
@@ -158,7 +160,8 @@ def create_app(test_config=None):
             prev_close = ticker_history[i-1]["close"]
             curr_close = candle["close"]
             
-            curr_quantity = qt.get_quantity(tda_time_to_postgres(candle["datetime"]))
+            curr_quantity = qt.get_quantity(candle["datetime"])
+            # curr_quantity = qt.get_quantity(tda_time_to_postgres(candle["datetime"]))
             
             curr_pl = (curr_close - prev_close) * curr_quantity + prev_pl
             prev_pl = curr_pl
@@ -190,30 +193,60 @@ def create_app(test_config=None):
     def postgres_time_to_tda(date):
         return date + 21600000
 
-    @app.route('/position/graph-data')
+    @app.route('/position/graph-data', methods=['POST'] )
     @cross_origin()
     def position_graph_data():
+        ticker = json.loads(request.data)["ticker"]
+        print(ticker)
         cur = conn.cursor()
-        cur.execute("SELECT ticker, jsonb_agg((SELECT x FROM (SELECT date AS name, pl::Numeric AS value ORDER BY date) AS x)) AS pl,jsonb_agg((SELECT x FROM (SELECT date AS name, plp AS value ORDER BY date) AS x)) AS plp,jsonb_agg((SELECT x FROM (SELECT date AS name, quantity AS value ORDER BY date) AS x)) AS quantity FROM position_transaction_history GROUP BY ticker;")
+        cur.execute(f"SELECT ticker, jsonb_agg((SELECT x FROM (SELECT date AS name, pl::Numeric AS value ORDER BY date) AS x)) AS pl,jsonb_agg((SELECT x FROM (SELECT date AS name, plp AS value ORDER BY date) AS x)) AS plp,jsonb_agg((SELECT x FROM (SELECT date AS name, quantity AS value ORDER BY date) AS x)) AS quantity FROM position_transaction_history WHERE ticker = \'{ticker}\' GROUP BY ticker;")
         gdata = cur.fetchone()
+        # print(gdata)
         # print(acconts)
         return {"graphdata": gdata}
+
+    @app.route('/position/ticks')
+    @cross_origin()
+    def position_ticks():
+        cur = conn.cursor()
+        cur.execute("SELECT ticker FROM position_transaction_history GROUP BY ticker;")
+        tickers = cur.fetchall()
+        # print(acconts)
+        return {"tickers": tickers}
 
     return app
 
 class Quantity_Tracker:
     def __init__(self, quantities):
+        print(quantities)
         self.quantities = quantities
         self.index = -1
-        self.prev_date = quantities[0][0]
-        self.quantity = 0
 
-    def get_quantity(self, date):
-        while(self.prev_date <= date):
-        # if(self.prev_date < date):
+        self.prev_date = quantities[0][0]
+        # self.prev_date = 0
+        self.quantity = quantities[0][1]
+        # self.quantity = 0
+
+    # This was not working
+    def get_quantity2(self, date):
+        print("GET QUANTITY", self.prev_date, date, self.prev_date - date, self.quantities, self.quantity, self.index)
+        while(self.prev_date < date and self.index < len(self.quantities)):
             self.index += 1
-            self.prev_date = self.quantities[self.index][0]
             self.quantity += self.quantities[self.index][1]
+            self.prev_date = self.quantities[self.index][0]
+
+            print(self.quantity, self.prev_date, self.index)
+
         return self.quantity
+
+    # And this sucks but it works.
+    def get_quantity(self, date):
+        quantity = 0
+        print("GQ: ", date, self.quantities)
+        for tx in self.quantities:
+            if(tx[0] <= date):
+                quantity += tx[1]
+        
+        return quantity
         
 
