@@ -3,4 +3,14 @@
 
 html{
     font-family: 'Nunito Sans', sans-serif;
+    color:#00e63d;
+    letter-spacing: 1px;
+    font-weight: 200;
+
+    background-color: #111;
+}
+
+body{
+    /* Remove default spacing around edges */
+    margin: 0px;
 }
