@@ -1,0 +1,10 @@
+.accounts{
+    margin: auto;
+    width: 80%;
+    border-collapse: collapse;
+}
+
+.accounts th, .accounts td {
+    border: 1px solid var(--faded-white);
+    padding:5px;
+}
