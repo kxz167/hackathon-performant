@@ -27,8 +27,9 @@ INSERT INTO account_transaction (account_uuid, amount, date) VALUES ('3d23e8c1-7
 INSERT INTO account_transaction (account_uuid, amount, date) VALUES ('3d23e8c1-71f1-48f8-a323-60fd159f3c37', 250.89, '2022-02-5');
 
 -- ACCOUNT SUMMARY:
--- GET THE DEPOSITED BALANCE
+-- GET THE DEPOSITED BALANCE (UNUSED)
 SELECT sum(account_transaction.amount) FROM account_transaction;
 
 -- API
 -- Get the accounts and their balances.
+SELECT account.uuid, name, description, sum(account_transaction.amount) FROM account JOIN account_transaction ON account.uuid=account_transaction.account_uuid GROUP BY account.uuid;

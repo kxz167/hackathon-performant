@@ -47,3 +47,11 @@ Then, define the following:
     - ex: `"dbname=database_name user=login_user password=secure_pw host=server_address port=server_port"`
 - `tda_clientid = "<TDA Client ID from API>"`
     - This will require a devloper and TDA trading account as well as a registered app.
+
+## Files:
+
+The majority of the important python files are the following listed under `performant_api`:
+- __init__.py
+    - This is where all of the API endpoints are defined. This might be bad, but it makes life very easy.
+- tda_requester.py
+    - This is a python module that will handle all of the API querying to receive TDA candlesticks.

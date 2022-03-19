@@ -34,3 +34,19 @@ hr{
     background:none;
     color: var(--main-green);
 } */
+
+/* FORMS */
+.horizontal-form{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.form-input{
+    /* width: fit-content; */
+}
+
+.horizontal-form > .form-input > label{
+    margin-right:10px;
+    /* width: fit-content; */
+}
