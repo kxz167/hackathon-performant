@@ -121,17 +121,19 @@ def create_app(test_config=None):
     @app.route('/position/test-calc')
     @cross_origin()
     def test_calc():
-        update_pos_history(*("AAPL",Decimal('1646784000000')))
+        update_pos_history(*("AAPL",Decimal('1646784000000'), "2022-3-9"))
         return 'testing'
 
 
     # HELPER FUNCTIONS:
     # THERE IS 86400000 miliseconds in 24 hours
-    def update_pos_history(ticker, date):
+    def update_pos_history(ticker, date, date_text):
         # GET INFO FROM TDA:
         # date=postgres_time_to_tda(date)
         ticker_history = price_history(ticker, postgres_time_to_tda(date)-DAY_IN_MILLI)
-
+        cur = conn.cursor()
+        cur.execute(f'SELECT extract(epoch from date)*1000 as date, quantity FROM position_transaction WHERE ticker = \'{ticker}\' AND date >= \'{date_text}\' ORDER BY date;')
+        quantities = cur.fetchall()
         print(f"DATE:{date}, TDA DATE: {postgres_time_to_tda(date)}, QUERIED DATE: {postgres_time_to_tda(date)-DAY_IN_MILLI}")
         updated_history = []
         for i in range(1,len(ticker_history[1:])):

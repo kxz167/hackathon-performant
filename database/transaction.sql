@@ -48,3 +48,13 @@ FROM position_transaction
 WHERE
 	ticker = 'AAPL'
 ORDER BY date;
+
+-- GET THE TIMES FOR QUANTITY CALCULATION:
+SELECT 
+	extract(epoch from date)*1000 as date,
+	quantity
+FROM position_transaction
+WHERE 
+	ticker = 'AAPL' AND
+	date >= '2022-3-9'
+ORDER BY date;
