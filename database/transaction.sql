@@ -55,6 +55,5 @@ SELECT
 	quantity
 FROM position_transaction
 WHERE 
-	ticker = 'AAPL' AND
-	date >= '2022-3-9'
+	ticker = 'AAPL'
 ORDER BY date;

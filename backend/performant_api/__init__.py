@@ -129,23 +129,37 @@ def create_app(test_config=None):
     # THERE IS 86400000 miliseconds in 24 hours
     def update_pos_history(ticker, date, date_text):
         # GET INFO FROM TDA:
-        # date=postgres_time_to_tda(date)
         ticker_history = price_history(ticker, postgres_time_to_tda(date)-DAY_IN_MILLI)
+        # Get quantities from DB
         cur = conn.cursor()
-        cur.execute(f'SELECT extract(epoch from date)*1000 as date, quantity FROM position_transaction WHERE ticker = \'{ticker}\' AND date >= \'{date_text}\' ORDER BY date;')
+        cur.execute(f'SELECT extract(epoch from date)*1000 as date, quantity FROM position_transaction WHERE ticker = \'{ticker}\' ORDER BY date;')
         quantities = cur.fetchall()
-        print(f"DATE:{date}, TDA DATE: {postgres_time_to_tda(date)}, QUERIED DATE: {postgres_time_to_tda(date)-DAY_IN_MILLI}")
+        #Quantity tracker:
+        qt = Quantity_Tracker(quantities)
+
+        print(f"Ticker: {ticker}, DATE:{date}, TDA DATE: {postgres_time_to_tda(date)}, QUERIED DATE: {postgres_time_to_tda(date)-DAY_IN_MILLI}")
+        print(quantities)
+
+        #Run through all the necessary days:
         updated_history = []
         for i in range(1,len(ticker_history[1:])):
-            print(i)
+            print("==============")
+            # print(i)
             candle = ticker_history[i]
+
+            prev_close = ticker_history[i-1]["close"]
+            curr_close = candle["close"]
+            
+            curr_quantity = qt.get_quantity(tda_time_to_postgres(candle["datetime"]))
+            
+            print("PL", (curr_close - prev_close) * curr_quantity)
+
             print(candle)
             updated_history.append(candle["close"])
 
         print(updated_history)
 
-        print(f'Ticker: {ticker}, Date {date}')
-        print(sys_date.today())
+        # print(sys_date.today())
         # print(time.time() * 1000 - DAY_IN_MILLI)
         # print(sys_date.today().utcfromtimestamp(0))
 
@@ -156,3 +170,20 @@ def create_app(test_config=None):
         return date + 21600000
 
     return app
+
+class Quantity_Tracker:
+    def __init__(self, quantities):
+        self.quantities = quantities
+        self.index = -1
+        self.prev_date = quantities[0][0]
+        self.quantity = 0
+
+    def get_quantity(self, date):
+        while(self.prev_date <= date):
+        # if(self.prev_date < date):
+            self.index += 1
+            self.prev_date = self.quantities[self.index][0]
+            self.quantity += self.quantities[self.index][1]
+        return self.quantity
+        
+
