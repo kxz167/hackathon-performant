@@ -121,13 +121,13 @@ def create_app(test_config=None):
     @app.route('/position/test-calc')
     @cross_origin()
     def test_calc():
-        update_pos_history(*("AAPL",Decimal('1646784000000'), "2022-3-9"))
+        update_pos_history(*("3d23e8c1-71f1-48f8-a323-60fd159f3c37","AAPL",Decimal('1646784000000'), "2022-3-9"))
         return 'testing'
 
 
     # HELPER FUNCTIONS:
     # THERE IS 86400000 miliseconds in 24 hours
-    def update_pos_history(ticker, date, date_text):
+    def update_pos_history(account_uuid, ticker, date, date_text):
         # GET INFO FROM TDA:
         ticker_history = price_history(ticker, postgres_time_to_tda(date)-DAY_IN_MILLI)
         # Get quantities from DB
@@ -142,6 +142,8 @@ def create_app(test_config=None):
 
         #Run through all the necessary days:
         updated_history = []
+        prev_pl = 0
+        print(ticker_history[0])
         for i in range(1,len(ticker_history[1:])):
             print("==============")
             # print(i)
@@ -152,7 +154,20 @@ def create_app(test_config=None):
             
             curr_quantity = qt.get_quantity(tda_time_to_postgres(candle["datetime"]))
             
-            print("PL", (curr_close - prev_close) * curr_quantity)
+            curr_pl = (curr_close - prev_close) * curr_quantity + prev_pl
+            prev_pl = curr_pl
+
+            curr_pl_per = curr_pl / (curr_close * curr_quantity)
+
+            curr_date = sys_date.fromtimestamp(candle["datetime"]/1000)
+            # print(type(candle["datetime"]))
+            # print(sys_date.fromtimestamp(candle["datetime"]/1000))
+
+            print(f"DATE: {curr_date}, Quantity: {curr_quantity}, PL: {curr_pl}, PL%: {curr_pl_per}")
+
+            cur = conn.cursor()
+            cur.execute(f"INSERT INTO position_transaction_history (account_uuid, date, ticker, quantity, pl, plp) VALUES (\'{account_uuid}\', \'{curr_date}\', \'{ticker}\', {curr_quantity}, {curr_pl}, {curr_pl_per}) ON CONFLICT ON CONSTRAINT position_transaction_history_pkey DO UPDATE SET quantity = EXCLUDED.quantity, pl = EXCLUDED.pl, plp = EXCLUDED.plp;")
+            conn.commit()
 
             print(candle)
             updated_history.append(candle["close"])
