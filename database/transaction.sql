@@ -14,6 +14,11 @@ CREATE TABLE position_transaction (
 
 -- INSERTION:
 INSERT INTO position_transaction (account_uuid, quantity, ticker, date, price) VALUES ('3d23e8c1-71f1-48f8-a323-60fd159f3c37', 2, 'AAPL', '2022-3-15', 183.24);
+INSERT INTO 
+position_transaction (account_uuid, quantity, ticker, date, price) 
+VALUES ('3d23e8c1-71f1-48f8-a323-60fd159f3c37', 1, 'AAPL', '2022-3-11', 183.24)
+RETURNING extract(epoch from date) * 1000 as date, ticker;
+
 
 -- MAYBE USEFUL QUERIES, NOT! THESE WILL NOT WORK, NEED A SCAN FUNCTION:
 -- INVESTED VALUE IN STOCK...?
@@ -36,3 +41,10 @@ SELECT
         ORDER BY date)
 FROM position_transaction
 GROUP BY ticker;
+
+-- SAMPLE GET FOR AAPL, gets all information needed to calculate quantity + 
+SELECT quantity, extract(epoch from date) * 1000 as date_mili, price 
+FROM position_transaction
+WHERE
+	ticker = 'AAPL'
+ORDER BY date;

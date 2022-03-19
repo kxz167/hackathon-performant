@@ -14,6 +14,15 @@ import json
 from .tda_requester import price_history
 import requests
 
+#Dates:
+from datetime import date as sys_date
+import time
+
+#TEMPORARY TESTING
+from decimal import Decimal
+global DAY_IN_MILLI
+DAY_IN_MILLI = Decimal('86400000')
+
 global conn
 
 def create_app(test_config=None):
@@ -85,9 +94,17 @@ def create_app(test_config=None):
     @cross_origin()
     def make_transaction():
         record = json.loads(request.data)
+
         cur = conn.cursor()
-        cur.execute(f'INSERT INTO position_transaction (account_uuid, quantity, ticker, date, price) VALUES (\'{record["account"]}\', {record["quantity"]}, \'{record["ticker"]}\', \'{record["date"]}\', {record["price"]});')
+        cur.execute(f'INSERT INTO position_transaction (account_uuid, quantity, ticker, date, price) VALUES (\'{record["account"]}\', {record["quantity"]}, \'{record["ticker"]}\', \'{record["date"]}\', {record["price"]}) RETURNING ticker, extract(epoch from date) * 1000 as date;')
         conn.commit()
+        results = cur.fetchall()
+
+        print(results)
+
+        # update_pos_history(*results[0])
+        update_pos_history(*("AAPL",Decimal('1646784000000')))
+
         # print(record)
         return {"status": "good"}
 
@@ -101,10 +118,39 @@ def create_app(test_config=None):
         return {"transactions": transactions}
 
     
-
+    @app.route('/position/test-calc')
+    @cross_origin()
+    def test_calc():
+        update_pos_history(*("AAPL",Decimal('1646784000000')))
+        return 'testing'
 
 
     # HELPER FUNCTIONS:
-    
+    # THERE IS 86400000 miliseconds in 24 hours
+    def update_pos_history(ticker, date):
+        # GET INFO FROM TDA:
+        # date=postgres_time_to_tda(date)
+        ticker_history = price_history(ticker, postgres_time_to_tda(date)-DAY_IN_MILLI)
+
+        print(f"DATE:{date}, TDA DATE: {postgres_time_to_tda(date)}, QUERIED DATE: {postgres_time_to_tda(date)-DAY_IN_MILLI}")
+        updated_history = []
+        for i in range(1,len(ticker_history[1:])):
+            print(i)
+            candle = ticker_history[i]
+            print(candle)
+            updated_history.append(candle["close"])
+
+        print(updated_history)
+
+        print(f'Ticker: {ticker}, Date {date}')
+        print(sys_date.today())
+        # print(time.time() * 1000 - DAY_IN_MILLI)
+        # print(sys_date.today().utcfromtimestamp(0))
+
+    def tda_time_to_postgres(date):
+        return date - 21600000
+
+    def postgres_time_to_tda(date):
+        return date + 21600000
 
     return app
