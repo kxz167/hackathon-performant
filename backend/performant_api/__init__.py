@@ -1,5 +1,5 @@
 #Secrets:
-from .secrets import connection_string, tda_clientid
+from .secrets import connection_string
 
 #Postgres Driver
 import psycopg2
@@ -8,6 +8,7 @@ import psycopg2
 from flask import Flask
 
 #API Requests
+from .tda_requester import price_history
 import requests
 
 global conn
@@ -46,12 +47,14 @@ def create_app(test_config=None):
         print("============================")
 
         print("====== Requests stuff ======")
-        response = requests.get("https://api.tdameritrade.com/v1/marketdata/TSLA/pricehistory?apikey=%s&periodType=month&period=1&frequencyType=daily&frequency=1" % tda_clientid)
-        print(response.json())
+        # response = requests.get(price_history())
+        # print(response.json())
+        candles = price_history()
+        print(len(candles))
         print("============================")
         
         
-        return response.json()
+        return {"candles": candles}
     
     
 
