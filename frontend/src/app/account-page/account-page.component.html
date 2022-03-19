@@ -1,3 +1,16 @@
 <h1>Accounts:</h1>
 <hr>
+<table>
+    <tr>
+        <th>Account Name</th>
+        <th>Account Description</th>
+        <th>Total Deposits</th>
+    </tr>
+    <tr *ngFor="let account of accounts">
+        <td>{{account[1]}}</td>
+        <td>{{account[2]}}</td>
+        <td>{{account[3]}}</td>
+    </tr>
+</table>
+<!-- <div *ngFor="let account of accounts">{{account[1]}}, {{account[2]}}</div> -->
 <h2>Funding:</h2>

@@ -29,3 +29,6 @@ INSERT INTO account_transaction (account_uuid, amount, date) VALUES ('3d23e8c1-7
 -- ACCOUNT SUMMARY:
 -- GET THE DEPOSITED BALANCE
 SELECT sum(account_transaction.amount) FROM account_transaction;
+
+-- API
+-- Get the accounts and their balances.

@@ -64,7 +64,7 @@ def create_app(test_config=None):
     @cross_origin()
     def get_accounts():
         cur = conn.cursor()
-        cur.execute('SELECT uuid, name, description FROM account;')
+        cur.execute('SELECT account.uuid, name, description, sum(account_transaction.amount) FROM account JOIN account_transaction ON account.uuid=account_transaction.account_uuid GROUP BY account.uuid;')
         accounts = cur.fetchall()
         # print(acconts)
         return {"accounts": accounts}

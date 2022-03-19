@@ -12,10 +12,13 @@ export class AccountPageComponent implements OnInit {
     private apiService: ApiService
   ) { }
 
+  accounts: any;
+
   ngOnInit(): void {
     this.apiService.getAccounts().subscribe(
-      response => {
+      (response: any) => {
         console.warn(response);
+        this.accounts = response['accounts'];
       }
     );
   }
