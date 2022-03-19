@@ -18,6 +18,10 @@ export class ApiService {
     return this.http.post(environment.apiUrl + "/account/fund-account", data);
   }
 
+  getTransactions(){
+    return this.http.get(environment.apiUrl + "/position/get-transactions");
+  }
+
   makeTransaction(data:any){
     return this.http.post(environment.apiUrl + "/position/make-transaction", data);
   }

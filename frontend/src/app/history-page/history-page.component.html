@@ -1,1 +1,12 @@
-<p>history-page works!</p>
+<table class="transactions">
+    <tr>
+        <th>Ticker</th>
+        <th>Account Description</th>
+    </tr>
+    <tr *ngFor="let transaction_group of transactions">
+        <td>{{transaction_group[0]}}</td>
+        <td class="subrow-container">
+            <tr class="subrow" *ngFor="let tx of transaction_group[1]">{{tx | json}}</tr>
+        </td>
+    </tr>
+</table>

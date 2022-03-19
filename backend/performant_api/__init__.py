@@ -91,4 +91,20 @@ def create_app(test_config=None):
         # print(record)
         return {"status": "good"}
 
+    @app.route('/position/get-transactions')
+    @cross_origin()
+    def get_transactions():
+        cur = conn.cursor()
+        cur.execute('SELECT ticker, jsonb_agg(to_jsonb(position_transaction.*) - \'{ticker, account_uuid}\'::text[] ORDER BY date) FROM position_transaction GROUP BY ticker;')
+        transactions = cur.fetchall()
+        # print(acconts)
+        return {"transactions": transactions}
+
+    
+
+
+
+    # HELPER FUNCTIONS:
+    
+
     return app

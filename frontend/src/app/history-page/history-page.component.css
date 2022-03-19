@@ -1,0 +1,8 @@
+.subrow-container{
+    padding:0px;
+}
+
+.subrow{
+    border:solid 1px var(--faded-white);
+    
+}
