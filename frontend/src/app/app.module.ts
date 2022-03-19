@@ -9,6 +9,7 @@ import { SummaryPageComponent } from './summary-page/summary-page.component';
 import { VisualizePageComponent } from './visualize-page/visualize-page.component';
 import { HistoryPageComponent } from './history-page/history-page.component';
 import { InputPageComponent } from './input-page/input-page.component';
+import { HttpClientModule } from '@angular/common/http'
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { InputPageComponent } from './input-page/input-page.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
