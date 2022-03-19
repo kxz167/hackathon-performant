@@ -36,8 +36,19 @@ ngx-charts-line-chart text{
     display:flex;
     flex-direction: row;
     flex-grow:1;
+    box-sizing: border-box;
+    padding:20px 0px;
 }
 
 .visual-graph{
     flex-grow: 1;
+    // padding:20px;
+    box-sizing: border-box;
+}
+
+.vertical-form{
+    align-items: end;
+}
+h2{
+    text-align: right;
 }

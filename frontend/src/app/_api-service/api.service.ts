@@ -26,7 +26,11 @@ export class ApiService {
     return this.http.post(environment.apiUrl + "/position/make-transaction", data);
   }
 
-  getPositionGraphData(){
-    return this.http.get(environment.apiUrl + "/position/graph-data")
+  getPositionGraphData(ticker:any){
+    return this.http.get(environment.apiUrl + "/position/graph-data", ticker)
+  }
+
+  getPositionTicks(){
+    return this.http.get(environment.apiUrl + "/position/ticks")
   }
 }

@@ -29,23 +29,30 @@
     </div>
     <div class="visual-container">
         <div class="visual-options">
-            <h2>Options</h2>
+            <h2>Options:</h2>
             <form class="vertical-form" [formGroup]="posOptForm" (change)="updateGraphSeries()">
                 <div class="form-input">
-                    <label for="pl">Profits and Losses:</label>
-                    <input id ="pl" type="checkbox" class="form-input" formControlName="pl" checked>
+                    <select (change)="getSymbolGraphInfo($event)" [formControl]="tickerForm">
+                        <option *ngFor="let ticker of availablePositions" value="{{ticker}}">{{ticker}}</option>
+                    </select>
                 </div>
-                <div class="form-input">
-                    <label for="plp">Profits and Losses (%):</label>
-                    <input id="plp" type="checkbox" class="form-input" formControlName="plp">
-                </div>
-                <div class="form-input">
-                    <label for="pl">Quantity:</label>
-                    <input id="quantity" type="checkbox" class="form-input" formControlName="quantity">
-                </div>
+                <ng-template [ngIf]="tickerForm.value">
+                    <div class="form-input">
+                        <label for="pl">Profits and Losses ($):</label>
+                        <input id ="pl" type="checkbox" class="form-input" formControlName="pl" checked>
+                    </div>
+                    <div class="form-input">
+                        <label for="plp">Profits and Losses (%):</label>
+                        <input id="plp" type="checkbox" class="form-input" formControlName="plp">
+                    </div>
+                    <div class="form-input">
+                        <label for="pl">Quantity (#):</label>
+                        <input id="quantity" type="checkbox" class="form-input" formControlName="quantity">
+                    </div>
+                </ng-template>
             </form>
         </div>
-        <div class="visual-graph dark">
+        <div class="visual-graph dark" *ngIf="showGraph && tickerForm.value">
             <ngx-charts-line-chart
                 [scheme]="schemed"
                 [showXAxisLabel]="showXAxisLabel"
