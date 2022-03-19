@@ -19,4 +19,9 @@ $env:FLASK_ENV = "development"
 flask run
 ```
 
-The server will then be running on `http://127.0.0.1:5000`.
+The server will then be running on [`http://127.0.0.1:5000`](http://127.0.0.1:5000).
+
+Alternatively, you can also select the port using:
+```
+flask run --port <port#>
+```
