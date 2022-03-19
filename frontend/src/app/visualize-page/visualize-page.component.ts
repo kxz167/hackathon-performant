@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ApiService } from '../_api-service/api.service';
 
 @Component({
@@ -8,10 +9,36 @@ import { ApiService } from '../_api-service/api.service';
 })
 export class VisualizePageComponent implements OnInit {
 
+  //Forms:
+  posOptForm = this.fb.group({
+    pl: [''],
+    plp: [''],
+    quantity: ['']
+  });
+
+  updateGraphSeries(){
+    console.warn(this.posOptForm.value);
+    let newSeries: any[] = []
+    for (let key in this.posOptForm.value){
+      if(this.posOptForm.value[key]){
+        newSeries.push(this.seriesDict[key]);
+      }
+    }
+    // this.posOptForm.value.forEach((value:any) => {
+    //   console.warn(value);
+    //   if(value){
+    //     newSeries.push()
+    //   }
+    // });
+    this.multi = newSeries;
+  }
+
+
   visAccount = false;
 
   constructor(
-    private apiService:ApiService
+    private apiService:ApiService,
+    private fb : FormBuilder
   ) { }
 
   stockGData :any;
@@ -19,29 +46,41 @@ export class VisualizePageComponent implements OnInit {
   pgd_plp : any;
   pgd_quantity : any;
 
+  seriesDict :any = {};
+
+  dateParser = (pair:any) => ({
+    'name': new Date(pair["name"]), 
+    'value': pair['value']
+  });
+
   ngOnInit(): void {
+    this.multi = []
+
     this.apiService.getPositionGraphData().subscribe(
       (response: any) => {
         let all_data = response["graphdata"];
-        this.pgd_pl = all_data[1];
-        this.pgd_plp = all_data[2];
-        this.pgd_quantity = all_data[3]
         this.stockGData = response["graphdata"];
+        this.pgd_pl = 
+        {
+          "name": "Profits and Losses",
+          "series": all_data[1].map(this.dateParser)
+        };
+        this.seriesDict["pl"] = this.pgd_pl;
 
-        this.multi = [
-          {
-            "name": "Profits and Losses",
-            "series": this.pgd_pl
-          },
-          {
-            "name": "Profit loss percentages",
-            "series": this.pgd_plp
-          },
-          {
-            "name": "Quantity",
-            "series": this.pgd_quantity
-          }
-        ]
+
+        this.pgd_plp = {
+          "name": "Profit loss percentages",
+          "series": all_data[2].map(this.dateParser)
+        };
+        this.seriesDict["plp"] = this.pgd_plp;
+
+
+        this.pgd_quantity = {
+          "name": "Quantity",
+          "series": all_data[3].map(this.dateParser)
+        };
+        this.seriesDict["quantity"] = this.pgd_quantity;
+
       }
     )
   }
@@ -55,10 +94,8 @@ export class VisualizePageComponent implements OnInit {
   animations: boolean = true;
   xAxis: boolean = true;
   yAxis: boolean = true;
-  showYAxisLabel: boolean = true;
   showXAxisLabel: boolean = true;
-  xAxisLabel: string = 'Year';
-  yAxisLabel: string = 'Population';
+  xAxisLabel: string = 'Date';
   timeline: boolean = true;
 
   colorScheme = {

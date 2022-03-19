@@ -81,3 +81,12 @@ table th, table td {
     margin-right:10px;
     /* width: fit-content; */
 }
+
+.ngx-charts{
+    text{
+        fill: #fff;
+    }
+    .tooltip-anchor{
+        fill: #fff !important;
+    }
+}

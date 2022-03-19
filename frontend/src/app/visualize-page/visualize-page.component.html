@@ -29,26 +29,30 @@
     </div>
     <div class="visual-container">
         <div class="visual-options">
-            Options
-            <ol>
-                <li>1</li>
-                <li>1</li>
-                <li>1</li>
-                <li>1</li>
-                <li>1</li>
-            </ol>
+            <h2>Options</h2>
+            <form class="vertical-form" [formGroup]="posOptForm" (change)="updateGraphSeries()">
+                <div class="form-input">
+                    <label for="pl">Profits and Losses:</label>
+                    <input id ="pl" type="checkbox" class="form-input" formControlName="pl" checked>
+                </div>
+                <div class="form-input">
+                    <label for="plp">Profits and Losses (%):</label>
+                    <input id="plp" type="checkbox" class="form-input" formControlName="plp">
+                </div>
+                <div class="form-input">
+                    <label for="pl">Quantity:</label>
+                    <input id="quantity" type="checkbox" class="form-input" formControlName="quantity">
+                </div>
+            </form>
         </div>
-        <div class="visual-graph">
+        <div class="visual-graph dark">
             <ngx-charts-line-chart
                 [scheme]="schemed"
-                [legend]="legend"
                 [showXAxisLabel]="showXAxisLabel"
-                [showYAxisLabel]="showYAxisLabel"
                 [xAxis]="xAxis"
                 [yAxis]="yAxis"
                 [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel"
-                [timeline]="timeline"
+                [timeline]="true"
                 [results]="multi"
                 >
             </ngx-charts-line-chart>
