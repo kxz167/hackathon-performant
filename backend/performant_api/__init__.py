@@ -7,6 +7,9 @@ import psycopg2
 #Flask
 from flask import Flask
 
+#API Requests
+import requests
+
 global conn
 
 def create_app(test_config=None):
@@ -34,12 +37,21 @@ def create_app(test_config=None):
     # Define routes
     @app.route('/hello')
     def hello():
-        print("Database stuff!")
+
+        print("====== Database stuff ======")
         cur = conn.cursor()
         cur.execute('SELECT version()')
         db_version = cur.fetchone()
         print(db_version)
-        return 'Hello, World!'
+        print("============================")
+
+        print("====== Requests stuff ======")
+        response = requests.get("https://api.tdameritrade.com/v1/marketdata/TSLA/pricehistory?apikey=%s&periodType=month&period=1&frequencyType=daily&frequency=1" % tda_clientid)
+        print(response.json())
+        print("============================")
+        
+        
+        return response.json()
     
     
 
