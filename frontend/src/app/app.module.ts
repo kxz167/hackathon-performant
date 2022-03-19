@@ -10,6 +10,7 @@ import { VisualizePageComponent } from './visualize-page/visualize-page.componen
 import { HistoryPageComponent } from './history-page/history-page.component';
 import { InputPageComponent } from './input-page/input-page.component';
 import { HttpClientModule } from '@angular/common/http'
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { HttpClientModule } from '@angular/common/http'
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

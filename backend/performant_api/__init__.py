@@ -5,8 +5,10 @@ from .secrets import connection_string
 import psycopg2
 
 #Flask
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS, cross_origin
+
+import json
 
 #API Requests
 from .tda_requester import price_history
@@ -68,4 +70,14 @@ def create_app(test_config=None):
         accounts = cur.fetchall()
         # print(acconts)
         return {"accounts": accounts}
+
+    @app.route('/account/fund-account', methods=['POST'])
+    @cross_origin()
+    def fund_account():
+        record = json.loads(request.data)
+        cur = conn.cursor()
+        cur.execute(f'INSERT INTO account_transaction (account_uuid, amount, date) VALUES (\'{record["account"]}\',{record["amount"]}, \'{record["date"]}\');')
+        conn.commit()
+        print(record)
+        return {"status": "good"}
     return app

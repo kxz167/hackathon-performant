@@ -29,3 +29,8 @@ a {
 hr{
     color: var(--faded-white);
 }
+
+/* input, button, select, option{
+    background:none;
+    color: var(--main-green);
+} */

@@ -13,3 +13,20 @@
     </tr>
 </table>
 <h2>Funding:</h2>
+<form class="horizontal-form" [formGroup]="fundForm" (ngSubmit)="onSubmit()">
+    <div class="form-input">
+        <label for="account-selection">Targeted Account</label>
+        <select id="account-selection" class="form-inputs" formControlName="account">
+            <option *ngFor="let account of accounts" value="{{account[0]}}">{{account[1]}}</option>
+        </select>
+    </div>
+    <div class="form-input">
+        <label for="amount">Amount:</label>
+        <input id="amount" type="number" formControlName="amount">
+    </div>
+    <div class="form-input">
+        <label for="date">Deposit Date</label>
+        <input id="date" type="date" formControlName="date">
+    </div>
+    <button type="submit" [disabled]="!fundForm.valid">Submit</button>
+</form>

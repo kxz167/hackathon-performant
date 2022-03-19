@@ -13,4 +13,8 @@ export class ApiService {
   getAccounts(){
     return  this.http.get(environment.apiUrl + "/account/get-accounts");
   }
+
+  fundAccount(data:any){
+    return this.http.post(environment.apiUrl + "/account/fund-account", data);
+  }
 }
