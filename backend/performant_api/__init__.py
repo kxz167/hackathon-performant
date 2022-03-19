@@ -80,4 +80,15 @@ def create_app(test_config=None):
         conn.commit()
         print(record)
         return {"status": "good"}
+
+    @app.route('/position/make-transaction', methods=['POST'])
+    @cross_origin()
+    def make_transaction():
+        record = json.loads(request.data)
+        cur = conn.cursor()
+        # cur.execute(f'')
+        # conn.commit()
+        # print(record)
+        return {"status": "good"}
+
     return app

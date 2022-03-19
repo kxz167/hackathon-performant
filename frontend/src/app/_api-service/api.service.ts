@@ -17,4 +17,8 @@ export class ApiService {
   fundAccount(data:any){
     return this.http.post(environment.apiUrl + "/account/fund-account", data);
   }
+
+  makeTransaction(data:any){
+    return this.http.post(environment.apiUrl + "/position/make-transaction", data);
+  }
 }

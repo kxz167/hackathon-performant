@@ -1,0 +1,29 @@
+<h1>Order Submission:</h1>
+<form class="vertical-form" [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+    <div class="form-input">
+        <label for="ticker">Ticker:</label>
+        <input type="text" class="form-input" formControlName="ticker">
+    </div>
+    <div class="form-input">
+        <label for="quantity">Quantity:</label>
+        <input type="number" class="form-input" formControlName="quantity">
+    </div>
+    <div class="form-input">
+        <label for="price">Price:</label>
+        <input id="price" type="number" formControlName="price">
+    </div>
+
+    <div class="form-input">
+        <label for="account-selection">Transaction on:</label>
+        <select id="account-selection" class="form-inputs" formControlName="account">
+            <option *ngFor="let account of accounts" value="{{account[0]}}">{{account[1]}}</option>
+        </select>
+    </div>
+    <div class="form-input">
+        <label for="date">Purchase Date</label>
+        <input id="date" type="date" formControlName="date">
+    </div>
+    <div class="form-input">
+        <button type="submit" [disabled]="!transactionForm.valid">Submit</button>        
+    </div>
+</form>
