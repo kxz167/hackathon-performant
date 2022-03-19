@@ -43,7 +43,7 @@ flask run --port <port#>
 For the current api backend, secrets have been protected. In order for your project to work, create a file named `secrets.py` inside "performant_api"
 
 Then, define the following:
-- `connection_string = <string with connection options>`
-    - ex: `dbname=database_name user=login_user password=secure_pw host=server_address port=server_port`
-- `tda_clientid = <TDA Client ID from API>`
+- `connection_string = "<string with connection options>"`
+    - ex: `"dbname=database_name user=login_user password=secure_pw host=server_address port=server_port"`
+- `tda_clientid = "<TDA Client ID from API>"`
     - This will require a devloper and TDA trading account as well as a registered app.
