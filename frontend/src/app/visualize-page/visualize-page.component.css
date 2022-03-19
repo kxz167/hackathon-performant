@@ -1,0 +1,29 @@
+.method-switch{
+    display:flex;
+    justify-content: center;
+}
+
+.switch-button{
+    margin:15px 20px;
+    padding:10px 40px;
+    font-size: 2em;
+    transition: ease .2s;
+    border-radius: 1000px;
+    cursor: pointer;
+    transition: 'background-color' ease .5s;
+}
+
+.switch-button:hover{
+    background-color: #222;
+}
+
+.switch-button.active{
+    background-color: var(--main-green);
+    font-weight: 400;
+    color: #222;
+}
+
+.visual-container{
+    display:flex;
+    flex-direction: row;
+}

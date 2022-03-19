@@ -96,14 +96,14 @@ def create_app(test_config=None):
         record = json.loads(request.data)
 
         cur = conn.cursor()
-        cur.execute(f'INSERT INTO position_transaction (account_uuid, quantity, ticker, date, price) VALUES (\'{record["account"]}\', {record["quantity"]}, \'{record["ticker"]}\', \'{record["date"]}\', {record["price"]}) RETURNING ticker, extract(epoch from date) * 1000 as date;')
+        cur.execute(f'INSERT INTO position_transaction (account_uuid, quantity, ticker, date, price) VALUES (\'{record["account"]}\', {record["quantity"]}, \'{record["ticker"]}\', \'{record["date"]}\', {record["price"]}) RETURNING account_uuid, ticker, extract(epoch from date) * 1000 as date, date as date_text;')
         conn.commit()
-        results = cur.fetchall()
+        results = cur.fetchone()
 
         print(results)
 
         # update_pos_history(*results[0])
-        update_pos_history(*("AAPL",Decimal('1646784000000')))
+        update_pos_history(*results)
 
         # print(record)
         return {"status": "good"}
@@ -140,9 +140,15 @@ def create_app(test_config=None):
         print(f"Ticker: {ticker}, DATE:{date}, TDA DATE: {postgres_time_to_tda(date)}, QUERIED DATE: {postgres_time_to_tda(date)-DAY_IN_MILLI}")
         print(quantities)
 
+        # Get the previous history:
+        cur = conn.cursor()
+        cur.execute(f"SELECT pl::NUMERIC, plp, avg_price FROM position_transaction_history WHERE date < \'{date_text}\' ORDER BY date DESC LIMIT 1;")
+        prev_history = cur.fetchone()
+        print(prev_history)
+
         #Run through all the necessary days:
         updated_history = []
-        prev_pl = 0
+        prev_pl = float(prev_history[0])
         print(ticker_history[0])
         for i in range(1,len(ticker_history[1:])):
             print("==============")
@@ -183,6 +189,15 @@ def create_app(test_config=None):
 
     def postgres_time_to_tda(date):
         return date + 21600000
+
+    @app.route('/position/graph-data')
+    @cross_origin()
+    def position_graph_data():
+        cur = conn.cursor()
+        cur.execute("SELECT ticker, jsonb_agg((SELECT x FROM (SELECT date AS name, pl::Numeric AS value ORDER BY date) AS x)) AS pl,jsonb_agg((SELECT x FROM (SELECT date AS name, plp AS value ORDER BY date) AS x)) AS plp,jsonb_agg((SELECT x FROM (SELECT date AS name, quantity AS value ORDER BY date) AS x)) AS quantity FROM position_transaction_history GROUP BY ticker;")
+        gdata = cur.fetchone()
+        # print(acconts)
+        return {"graphdata": gdata}
 
     return app
 

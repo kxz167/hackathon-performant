@@ -17,7 +17,7 @@ INSERT INTO position_transaction (account_uuid, quantity, ticker, date, price) V
 INSERT INTO 
 position_transaction (account_uuid, quantity, ticker, date, price) 
 VALUES ('3d23e8c1-71f1-48f8-a323-60fd159f3c37', 1, 'AAPL', '2022-3-11', 183.24)
-RETURNING extract(epoch from date) * 1000 as date, ticker;
+RETURNING account_uuid, ticker, extract(epoch from date) * 1000 as date, date as date_text;
 
 
 -- MAYBE USEFUL QUERIES, NOT! THESE WILL NOT WORK, NEED A SCAN FUNCTION:

@@ -25,4 +25,8 @@ export class ApiService {
   makeTransaction(data:any){
     return this.http.post(environment.apiUrl + "/position/make-transaction", data);
   }
+
+  getPositionGraphData(){
+    return this.http.get(environment.apiUrl + "/position/graph-data")
+  }
 }
