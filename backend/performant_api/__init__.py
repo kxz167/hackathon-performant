@@ -86,8 +86,8 @@ def create_app(test_config=None):
     def make_transaction():
         record = json.loads(request.data)
         cur = conn.cursor()
-        # cur.execute(f'')
-        # conn.commit()
+        cur.execute(f'INSERT INTO position_transaction (account_uuid, quantity, ticker, date, price) VALUES (\'{record["account"]}\', {record["quantity"]}, \'{record["ticker"]}\', \'{record["date"]}\', {record["price"]});')
+        conn.commit()
         # print(record)
         return {"status": "good"}
 
