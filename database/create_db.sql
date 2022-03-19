@@ -1,0 +1,5 @@
+CREATE DATABASE performant
+    WITH 
+    OWNER = kxz167
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1;
