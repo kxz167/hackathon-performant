@@ -4,7 +4,7 @@ import { ApiService } from '../_api-service/api.service';
 @Component({
   selector: 'app-visualize-page',
   templateUrl: './visualize-page.component.html',
-  styleUrls: ['./visualize-page.component.css']
+  styleUrls: ['./visualize-page.component.scss']
 })
 export class VisualizePageComponent implements OnInit {
 
@@ -32,6 +32,14 @@ export class VisualizePageComponent implements OnInit {
           {
             "name": "Profits and Losses",
             "series": this.pgd_pl
+          },
+          {
+            "name": "Profit loss percentages",
+            "series": this.pgd_plp
+          },
+          {
+            "name": "Quantity",
+            "series": this.pgd_quantity
           }
         ]
       }

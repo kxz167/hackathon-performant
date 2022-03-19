@@ -1,20 +1,22 @@
-<div class="method-switch">
-    <div class="switch-button" [ngClass]="{'active': visAccount}">
-        <a (click)="visAccount = true">Account</a>
+<div class="visual-base">
+    <div class="method-switch">
+        <div class="switch-button" [ngClass]="{'active': visAccount}">
+            <a (click)="visAccount = true">Account</a>
+        </div>
+        <div class="switch-button" [ngClass]="{'active': !visAccount}">
+            <a (click)="visAccount = false">Position</a>
+        </div>
     </div>
-    <div class="switch-button" [ngClass]="{'active': !visAccount}">
-        <a (click)="visAccount = false">Position</a>
+    <hr>
+    <div *ngIf="visAccount; then thenBlock else elseBlock" class="display switch">
     </div>
-</div>
-<hr>
-<div *ngIf="visAccount; then thenBlock else elseBlock" class="display switch">
 </div>
 
+<!-- TEMPLATES: -->
 <!-- ACCOUNT -->
 <ng-template #thenBlock>
     Content to render when condition is true.
 </ng-template>
-
 <!-- POSITIONS -->
 <ng-template #elseBlock>
     <!-- {{stockGData | json}} -->

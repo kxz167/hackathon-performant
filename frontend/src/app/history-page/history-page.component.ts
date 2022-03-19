@@ -5,7 +5,7 @@ import { ApiService } from '../_api-service/api.service';
 @Component({
   selector: 'app-history-page',
   templateUrl: './history-page.component.html',
-  styleUrls: ['./history-page.component.css']
+  styleUrls: ['./history-page.component.scss']
 })
 export class HistoryPageComponent implements OnInit {
   

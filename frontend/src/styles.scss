@@ -14,11 +14,19 @@ html{
     font-weight: 200;
 
     background-color: #111;
+    height:100%;
 }
 
 body{
     /* Remove default spacing around edges */
     margin: 0px;
+    height:100%
+}
+
+app-root{
+    display:flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 a {
