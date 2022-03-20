@@ -2,7 +2,9 @@
 
 ## By Kris Zhao
 
-Welcome to my Hack CWRU Fintech submission!
+Welcome to my Hack CWRU Fintech submission! The devpost can be accessed [here](https://devpost.com/software/performant-semi-automated-investment-tracking-and-analysis).
+
+![Main page](_demo_images/hc_m1.png)
 
 ## Problem Statement:
 
@@ -13,6 +15,16 @@ Successful investments is all about managing risk and evaluating factors that ma
 Performant hopes to remedy this by providing a single, simple, and semi-automated process for getting a high level overview of your investment portfolio. This could then inform you of your risk tolerance, or the general market trends. Perhaps it might even illustrate how bad you are at this, saving you money in the long run by pushing you towards safer strategies such as ETFs and Funds.
 
 More in the details, Performant provides a simple account funding and transactions page, which pulls and calculates metrics automatically, then allows you to explore graphs and summary metrics. In this regard, it is heavily oriented as a summary tool and not meant for high frequency or intra day trading.
+
+## Demonstrations:
+
+### Video Walkthrough:
+
+A youtube demonstration can be located [here](https://youtu.be/qNfomf8AkmM) of simple functionality.
+
+### Images:
+
+Check out the [image library](#image-library) at the bottom for demonstration of the functionality.
 
 ## Overall structure:
 
@@ -84,3 +96,25 @@ While developing this project, I had a set of goals in mind. Suffice to say, not
 I had originally wanted to develop this project with new and scalable tools such as React (react native), and noSQL (such as amazon dynamo) but felt familiar tools would work better with the time crunch.
 - Short term: I believe more functionality and robustness can be built into the code and it can persist on the local network to manage all of my investments.
 - Long term: I want to move this into React to take advantage of desktop + mobile marketplaces and potentially push it out as a simplified insight tool.
+
+## Image library:
+
+### Display the account's summary metrics:
+
+![account_vis](/_demo_images/hc_d1.png)
+
+### Display a single positions analytics:
+
+![position_vis](/_demo_images/hc_d2.png)
+
+### Visualize all previous stock purchases:
+
+![history](/_demo_images/hc_d3.png)
+
+### Insert a new stock position:
+
+![input](/_demo_images/hc_d4.png)
+
+### Fund and manage account information:
+
+![account](/_demo_images/hc_d5.png)
