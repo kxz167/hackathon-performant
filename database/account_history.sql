@@ -13,7 +13,7 @@ CREATE TABLE account_transaction_history(
 )
 -- P/L agg:
 SELECT date, account_uuid, sum(pl) FROM position_transaction_history WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' GROUP BY date, account_uuid
-SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object('name',date, 'value' , sum(pl)) FROM position_transaction_history WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' GROUP BY date, account_uuid ORDER BY date ) as x;
+SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object('name',date, 'value' , sum(pl)::Numeric) FROM position_transaction_history WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' GROUP BY date, account_uuid ORDER BY date ) as x;
 
 
 --Paid for stocks:
@@ -32,7 +32,7 @@ GROUP BY account_uuid, date
 ORDER BY date;
 
 SELECT jsonb_agg(json_build_object) FROM 
-(SELECT json_build_object('name', date, 'value', sum(tot_value))
+(SELECT json_build_object('name', date, 'value', sum(tot_value)::Numeric)
 FROM position_transaction_history
 WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37'
 GROUP BY account_uuid, date
@@ -50,7 +50,7 @@ WHERE a.account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37'
 ORDER BY name
 
 SELECT jsonb_agg(json_build_object) FROM 
-(SELECT json_build_object ('value', value, 'name', name) FROM(
+(SELECT json_build_object ('value', value::Numeric, 'name', name) FROM(
 SELECT account_uuid, amount as value, date as name
 FROM account_transaction
 UNION
@@ -66,13 +66,14 @@ FROM account_transaction
 WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37'
 ORDER BY date;
 
-SELECT json_build_object('name', date, 'value', amount)
+SELECT jsonb_agg(json_build_object) FROM
+(SELECT json_build_object('name', date, 'value', amount::Numeric)
 FROM account_transaction 
 WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37'
-ORDER BY date;
+ORDER BY date) as x;
 
 SELECT jsonb_agg((
-	SELECT x FROM (SELECT date as name, amount as value ORDER BY date) as x)
+	SELECT x FROM (SELECT date as name, amount::Numeric as value ORDER BY date) as x)
 )
 FROM account_transaction
 WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37';

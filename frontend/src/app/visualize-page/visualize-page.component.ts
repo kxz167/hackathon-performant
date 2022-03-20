@@ -26,7 +26,15 @@ export class VisualizePageComponent implements OnInit {
   tickerForm = new FormControl('');
 
   updateAccGraphSeries(){
-
+    let newSeries: any[] = []
+    for (let key in this.accOptForm.value){
+      console.warn(key);
+      if(this.accOptForm.value[key]){
+        newSeries.push(this.accountSummaryDict[key]);
+      }
+    }
+    this.acc_graphs = newSeries;
+    console.warn(this.acc_graphs);
   }
   acc_graphs: any;
 
@@ -107,13 +115,44 @@ export class VisualizePageComponent implements OnInit {
   availablePositions: any;
   showGraph = false;
 
+  accountSummaryDict:any = {};
+
   ngOnInit(): void {
     this.apiService.getInvestmentValue().subscribe(
       (response: any) => {
-        console.warn(response);
-        console.warn(response["series"])
+        this.accountSummaryDict['inv_val'] = {
+          "name": "Investmant Value",
+          "series": response["summary"][0].map(this.dateParser)
+        };
       }
     );
+    this.apiService.getDepositBalance().subscribe(
+      (response: any) => {
+        this.accountSummaryDict['dep_bal'] = {
+          "name": "Deposit Balance",
+          "series": response["summary"][0].map(this.dateParser)
+        };
+      }
+    );
+    this.apiService.getAvailFunds().subscribe(
+      (response: any) => {
+        this.accountSummaryDict['avail_funds'] = {
+          "name": "Available Funds",
+          "series": response["summary"][0].map(this.dateParser)
+        };
+      }
+    );
+    this.apiService.getOverallPl().subscribe(
+      (response: any) => {
+        this.accountSummaryDict['ov_pl'] = {
+          "name": "Overall P/L",
+          "series": response["summary"][0].map(this.dateParser)
+        };
+      }
+    );
+
+  console.warn(this.accountSummaryDict);
+
 
     //get current symbols:
     this.apiService.getPositionTicks().subscribe(

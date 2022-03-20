@@ -222,7 +222,7 @@ def create_app(test_config=None):
     @cross_origin()
     def account_summary_dep_bal():
         cur = conn.cursor()
-        cur.execute("SELECT jsonb_agg((SELECT x FROM (SELECT date as name, amount as value ORDER BY date) as x)) FROM account_transaction WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37';")
+        cur.execute("SELECT jsonb_agg((SELECT x FROM (SELECT date as name, amount::Numeric as value ORDER BY date) as x)) FROM account_transaction WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37';")
         summary = cur.fetchone()
         return {"summary": summary}
 
@@ -230,7 +230,7 @@ def create_app(test_config=None):
     @cross_origin()
     def account_summary_inv_val():
         cur = conn.cursor()
-        cur.execute("SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object('name', date, 'value', sum(tot_value)) FROM position_transaction_history WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' GROUP BY account_uuid, date ORDER BY date) as x;")
+        cur.execute("SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object('name', date, 'value', sum(tot_value)::Numeric) FROM position_transaction_history WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' GROUP BY account_uuid, date ORDER BY date) as x;")
         summary = cur.fetchone()
         return {"summary": summary}
 
@@ -238,7 +238,7 @@ def create_app(test_config=None):
     @cross_origin()
     def account_summary_avail_funds():
         cur = conn.cursor()
-        cur.execute("SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object ('value', value, 'name', name) FROM(SELECT account_uuid, amount as value, date as name FROM account_transaction UNION SELECT account_uuid, -1 * (price*quantity) as value, date as name FROM position_transaction) as a WHERE a.account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' ORDER BY name ) as x;")
+        cur.execute("SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object ('value', value::Numeric, 'name', name) FROM(SELECT account_uuid, amount as value, date as name FROM account_transaction UNION SELECT account_uuid, -1 * (price*quantity) as value, date as name FROM position_transaction) as a WHERE a.account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' ORDER BY name ) as x;")
         summary = cur.fetchone()
         return {"summary": summary}
 
@@ -246,7 +246,7 @@ def create_app(test_config=None):
     @cross_origin()
     def account_summary_overall_pl():
         cur = conn.cursor()
-        cur.execute("SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object('name',date, 'value' , sum(pl)) FROM position_transaction_history WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' GROUP BY date, account_uuid ORDER BY date ) as x;")
+        cur.execute("SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object('name',date, 'value' , sum(pl)::Numeric) FROM position_transaction_history WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' GROUP BY date, account_uuid ORDER BY date ) as x;")
         summary = cur.fetchone()
         return {"summary": summary}
 

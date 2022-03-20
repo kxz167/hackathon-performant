@@ -34,8 +34,19 @@ export class ApiService {
     return this.http.get(environment.apiUrl + "/position/ticks");
   }
 
+  getDepositBalance(){
+    return this.http.get(environment.apiUrl + "/account/summary/dep-bal");
+  }
+  
+  getAvailFunds(){
+    return this.http.get(environment.apiUrl + "/account/summary/avail-funds");
+  }
+  
   getInvestmentValue(){
-    
     return this.http.get(environment.apiUrl + "/account/summary/inv-val");
+  }
+  
+  getOverallPl(){
+    return this.http.get(environment.apiUrl + "/account/summary/overall-pl");
   }
 }

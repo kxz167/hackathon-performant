@@ -49,7 +49,7 @@
                 </div> -->
             </form>
         </div>
-        <div class="visual-graph" *ngIf="showGraph && tickerForm.value">
+        <div class="visual-graph" *ngIf="showGraph && visAccount">
             <ngx-charts-line-chart
                 [scheme]="'forest'"
                 [showXAxisLabel]="showXAxisLabel"
