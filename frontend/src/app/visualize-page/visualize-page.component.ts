@@ -108,6 +108,12 @@ export class VisualizePageComponent implements OnInit {
   showGraph = false;
 
   ngOnInit(): void {
+    this.apiService.getInvestmentValue().subscribe(
+      (response: any) => {
+        console.warn(response);
+        console.warn(response["series"])
+      }
+    );
 
     //get current symbols:
     this.apiService.getPositionTicks().subscribe(

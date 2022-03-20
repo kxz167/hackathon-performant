@@ -27,14 +27,15 @@ export class ApiService {
   }
 
   getPositionGraphData(ticker:any){
-    return this.http.post(environment.apiUrl + "/position/graph-data", ticker)
+    return this.http.post(environment.apiUrl + "/position/graph-data", ticker);
   }
 
   getPositionTicks(){
-    return this.http.get(environment.apiUrl + "/position/ticks")
+    return this.http.get(environment.apiUrl + "/position/ticks");
   }
 
   getInvestmentValue(){
     
+    return this.http.get(environment.apiUrl + "/account/summary/inv-val");
   }
 }
