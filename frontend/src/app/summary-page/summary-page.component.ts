@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../_api-service/api.service';
 
 @Component({
   selector: 'app-summary-page',
@@ -7,9 +8,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SummaryPageComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private apiService: ApiService
+  ) { }
+
+
+  summaryValues:any;
 
   ngOnInit(): void {
+    this.apiService.getAccountSummary().subscribe(
+      (response: any) => {
+        console.warn(response);
+        this.summaryValues = response["summary"];
+      }
+    )
   }
 
 }

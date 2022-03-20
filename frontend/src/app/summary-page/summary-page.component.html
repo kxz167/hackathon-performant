@@ -1,1 +1,30 @@
-<p>summary-page works!</p>
+<div class="summary-container" *ngIf="summaryValues">
+    <div class="summary-focus">
+        <span class="main-metric">{{summaryValues["account_value"]}}</span>
+        <span class="metric-label">Account Value</span>
+    </div>
+    <div class="summary-secondary">
+        <div class="spacer"></div>
+        <div class="secondary-left">
+            <div class="metric-container mc-right mc-line-right">
+                <span class="metric-label">Deposit Balance</span>
+                <span class="secondary-metric">{{summaryValues["total_deposits"]}}</span>
+            </div>
+            <div class="metric-container mc-right">
+                <span class="secondary-metric">{{summaryValues["free_cash"]}}</span>
+                <span class="metric-label">Available Funds</span>
+            </div>
+        </div>
+        <div class="secondary-right">
+            <div class="metric-container mc-left">
+                <span class="metric-label">Invested Value</span>
+                <span class="secondary-metric">{{summaryValues["investments_value"]}}</span>
+            </div>
+            <div class="metric-container mc-left mc-line-left">
+                <span class="secondary-metric">{{summaryValues["overall_pl"]}}</span>
+                <span class="metric-label">Overall PL</span>
+            </div>
+        </div>
+        <div class="spacer"></div>
+    </div>
+</div>

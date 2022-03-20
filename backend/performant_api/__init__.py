@@ -20,6 +20,9 @@ import time
 
 #TEMPORARY TESTING
 from decimal import Decimal
+
+import locale
+
 global DAY_IN_MILLI
 DAY_IN_MILLI = Decimal('86400000')
 
@@ -217,8 +220,8 @@ def create_app(test_config=None):
         return {"tickers": tickers}
 
     # =================================================
-    # ACCOUNTS
-    @app.route('/account/summary/dep-bal')
+    # ACCOUNTS GRAPHING
+    @app.route('/account/graph/dep-bal')
     @cross_origin()
     def account_summary_dep_bal():
         cur = conn.cursor()
@@ -226,7 +229,7 @@ def create_app(test_config=None):
         summary = cur.fetchone()
         return {"summary": summary}
 
-    @app.route('/account/summary/inv-val')
+    @app.route('/account/graph/inv-val')
     @cross_origin()
     def account_summary_inv_val():
         cur = conn.cursor()
@@ -234,20 +237,51 @@ def create_app(test_config=None):
         summary = cur.fetchone()
         return {"summary": summary}
 
-    @app.route('/account/summary/avail-funds')
+    @app.route('/account/graph/avail-funds')
     @cross_origin()
     def account_summary_avail_funds():
         cur = conn.cursor()
-        cur.execute("SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object ('value', sum::Numeric, 'name', date) FROM( with data as (SELECT value, date FROM( SELECT account_uuid, amount as value, date FROM account_transaction UNION SELECT account_uuid, -1 * (price*quantity) as value, date FROM position_transaction) as a WHERE a.account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' ORDER BY date) SELECT date, sum (value) over (order by date asc rows between unbounded preceding and current row) FROM data) as x) as y;")
+        cur.execute("SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object ('value', sum::Numeric, 'name', date) FROM( with data as (SELECT value, date FROM( SELECT account_uuid, amount as value, date FROM account_transaction UNION SELECT account_uuid, -1 * (price*quantity) as value, date FROM position_transaction) as a WHERE a.account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' ORDER BY date) SELECT date, sum (valgraphue) over (order by date asc rows between unbounded preceding and current row) FROM data) as x) as y;")
         summary = cur.fetchone()
         return {"summary": summary}
 
-    @app.route('/account/summary/overall-pl')
+    @app.route('/account/graph/overall-pl')
     @cross_origin()
     def account_summary_overall_pl():
         cur = conn.cursor()
         cur.execute("SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object('name',date, 'value' , sum(pl)::Numeric) FROM position_transaction_history WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' GROUP BY date, account_uuid ORDER BY date ) as x;")
         summary = cur.fetchone()
+        return {"summary": summary}
+
+    # =================================================
+    # ACCOUNTS GRAPHING
+    @app.route('/account/summary/')
+    @cross_origin()
+    def account_summaryl():
+        summary = {}
+
+        cur = conn.cursor()
+        cur.execute("SELECT sum::Numeric AS cash_balance FROM (with data as (SELECT value, date FROM( SELECT account_uuid, amount as value, date FROM account_transaction UNION SELECT account_uuid, -1 * (price*quantity) as value, date FROM position_transaction) as a WHERE a.account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' ORDER BY date) SELECT date, sum (value) over (order by date asc rows between unbounded preceding and current row) FROM data) as x ORDER BY date DESC LIMIT 1;")
+        summary["free_cash"] = cur.fetchone()
+
+        cur = conn.cursor()
+        cur.execute("SELECT sum(pl) FROM position_transaction_history WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' GROUP BY date, account_uuid ORDER BY date DESC LIMIT 1;")
+        summary["overall_pl"] = cur.fetchone()
+
+        cur = conn.cursor()
+        cur.execute("SELECT sum as deposit_balance FROM (with data as (SELECT date, amount FROM account_transaction WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' ORDER BY date) SELECT date, sum (amount) over (order by date asc rows between unbounded preceding and current row) from data) as x ORDER BY date DESC LIMIT 1;")
+        summary["total_deposits"] = cur.fetchone()
+
+        cur = conn.cursor()
+        cur.execute("SELECT sum(tot_value)::Numeric AS value FROM position_transaction_history WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' GROUP BY account_uuid, date ORDER BY date DESC LIMIT 1;")
+        summary["investments_value"] = cur.fetchone()
+
+        locale.setlocale( locale.LC_ALL, '' )
+
+        summary["account_value"] = locale.currency(summary["free_cash"][0] + summary["investments_value"][0], grouping=True)
+        summary["free_cash"] = locale.currency(summary["free_cash"][0], grouping=True)
+        summary["investments_value"] = locale.currency(summary["investments_value"][0], grouping=True)
+
         return {"summary": summary}
 
     return app

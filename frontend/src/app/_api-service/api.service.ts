@@ -35,18 +35,21 @@ export class ApiService {
   }
 
   getDepositBalance(){
-    return this.http.get(environment.apiUrl + "/account/summary/dep-bal");
+    return this.http.get(environment.apiUrl + "/account/graph/dep-bal");
   }
   
   getAvailFunds(){
-    return this.http.get(environment.apiUrl + "/account/summary/avail-funds");
+    return this.http.get(environment.apiUrl + "/account/graph/avail-funds");
   }
   
   getInvestmentValue(){
-    return this.http.get(environment.apiUrl + "/account/summary/inv-val");
+    return this.http.get(environment.apiUrl + "/account/graph/inv-val");
   }
   
   getOverallPl(){
-    return this.http.get(environment.apiUrl + "/account/summary/overall-pl");
+    return this.http.get(environment.apiUrl + "/account/graph/overall-pl");
+  }
+  getAccountSummary(){
+    return this.http.get(environment.apiUrl + "/account/summary");
   }
 }
