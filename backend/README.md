@@ -1,4 +1,4 @@
-# Backend
+# Performant Backend
 
 The backend server is what will link the TD Ameritrade API with the Angular frontend, as well as perform python scripts in order to process price history and calculate performance metrics.
 
@@ -9,6 +9,8 @@ This backend requires the following packages:
 - flask
 - requests
 - psycopg2
+
+As well as other smaller libraries. Because of the time crunch, these can really be found under `/backend/performant_api/__init__.py`
 
 ## Framework:
 
@@ -38,15 +40,19 @@ Alternatively, you can also select the port using:
 flask run --port <port#>
 ```
 
+But note that if you do use a different port, you will need to make the requesite changes in the Angular environment files.
+
 ## Secrets:
 
-For the current api backend, secrets have been protected. In order for your project to work, create a file named `secrets.py` inside "performant_api"
+For the current api backend, secrets have been protected. In order for your project to work, create a file named `secrets.py` inside `/backend/performant_api`
 
 Then, define the following:
 - `connection_string = "<string with connection options>"`
     - ex: `"dbname=database_name user=login_user password=secure_pw host=server_address port=server_port"`
 - `tda_clientid = "<TDA Client ID from API>"`
     - This will require a devloper and TDA trading account as well as a registered app.
+
+Once the file has been created, you should be able to easily and simply run the server.
 
 ## Files:
 

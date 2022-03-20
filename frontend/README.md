@@ -1,4 +1,6 @@
-# Performant
+# Performant User Interface
+
+The UI was created with the Angular framework.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.2.
 
@@ -24,8 +26,13 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Important Notes:
 1. Currently, there is some validation (on forms) but there is little standardization and typechecking as that would take extra time to implement.
+2. The application itself is also incredibly brittle, more time is required to add robustness. For instance, stock transactions are required before navigating to the home page.
+   1. Easily fixable by adding a check, but lower on the priority list vs pure functionality.
+3. API Information is stored in the environment files. If you have a different backend, these may be helpful to change.
 
 ## Running and deploying:
+
+The application while being developed was run completely on the local development server.
 
 ### Development server
 
@@ -34,15 +41,3 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 ### Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-### Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-### Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-### Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
