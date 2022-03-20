@@ -1,12 +1,26 @@
-<table class="transactions">
-    <tr>
-        <th>Ticker</th>
-        <th>Account Description</th>
-    </tr>
-    <tr *ngFor="let transaction_group of transactions">
-        <td>{{transaction_group[0]}}</td>
-        <td class="subrow-container">
-            <tr class="subrow" *ngFor="let tx of transaction_group[1]">{{tx | json}}</tr>
-        </td>
-    </tr>
-</table>
+<div class="history-container">
+    <table class="transactions">
+        <tr>
+            <th>Ticker</th>
+            <th>TX Date</th>
+            <th>Purchase Price</th>
+            <th>Quantity</th>
+        </tr>
+        <ng-container *ngFor="let ticker_group of transactions">
+            <tr *ngFor="let tx of ticker_group[1]; first as isFirst">
+                <td *ngIf="isFirst" [attr.rowspan]="ticker_group[1].length">
+                    {{ticker_group[0]}}
+                </td>
+                <td>
+                    {{tx["date"]}}
+                </td>
+                <td>
+                    {{tx["price"]}}
+                </td>
+                <td>
+                    {{tx["quantity"]}}
+                </td>
+            </tr>
+        </ng-container>
+    </table>    
+</div>

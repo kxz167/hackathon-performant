@@ -35,18 +35,6 @@
                     <label for="ov_pl"> Overall P/L ($):</label>
                     <input id="ov_pl" type="checkbox" class="form-input" formControlName="ov_pl">
                 </div>
-                <!-- <div class="form-input">
-                    <label for=""> (%):</label>
-                    <input id="" type="checkbox" class="form-input" formControlName="">
-                </div>
-                <div class="form-input">
-                    <label for=""> (%):</label>
-                    <input id="" type="checkbox" class="form-input" formControlName="">
-                </div>
-                <div class="form-input">
-                    <label for=""> (%):</label>
-                    <input id="" type="checkbox" class="form-input" formControlName="">
-                </div> -->
             </form>
         </div>
         <div class="visual-graph" *ngIf="showGraph && visAccount">
@@ -65,20 +53,13 @@
 </ng-template>
 <!-- POSITIONS -->
 <ng-template #elseBlock>
-    <!-- {{stockGData | json}} -->
-    
-    <div *ngIf="pgd_pl">
-        <!-- {{pgd_pl | json}}
-        {{pgd_plp | json}}
-        {{pgd_quantity | json}} -->
-        
-    </div>
     <div class="visual-container">
         <div class="visual-options">
             <h2>Options:</h2>
             <form class="vertical-form" [formGroup]="posOptForm" (change)="updateGraphSeries()">
                 <div class="form-input">
-                    <select (change)="getSymbolGraphInfo($event)" [formControl]="tickerForm">
+                    <label for="ticker">Owned Positions</label>
+                    <select id="ticker" (change)="getSymbolGraphInfo($event)" [formControl]="tickerForm">
                         <option *ngFor="let ticker of availablePositions" value="{{ticker}}">{{ticker}}</option>
                     </select>
                 </div>

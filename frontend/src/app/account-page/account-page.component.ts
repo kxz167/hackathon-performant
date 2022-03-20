@@ -46,6 +46,7 @@ export class AccountPageComponent implements OnInit {
         console.warn(response);
         if(response.status == "good"){
           this.fundForm.reset();
+          console.warn(this.fundForm.value);
           this.updateAccounts();
         }
       }

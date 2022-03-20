@@ -241,7 +241,7 @@ def create_app(test_config=None):
     @cross_origin()
     def account_summary_avail_funds():
         cur = conn.cursor()
-        cur.execute("SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object ('value', sum::Numeric, 'name', date) FROM( with data as (SELECT value, date FROM( SELECT account_uuid, amount as value, date FROM account_transaction UNION SELECT account_uuid, -1 * (price*quantity) as value, date FROM position_transaction) as a WHERE a.account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' ORDER BY date) SELECT date, sum (valgraphue) over (order by date asc rows between unbounded preceding and current row) FROM data) as x) as y;")
+        cur.execute("SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object ('value', sum::Numeric, 'name', date) FROM( with data as (SELECT value, date FROM( SELECT account_uuid, amount as value, date FROM account_transaction UNION SELECT account_uuid, -1 * (price*quantity) as value, date FROM position_transaction) as a WHERE a.account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37' ORDER BY date) SELECT date, sum (value) over (order by date asc rows between unbounded preceding and current row) FROM data) as x) as y;")
         summary = cur.fetchone()
         return {"summary": summary}
 
