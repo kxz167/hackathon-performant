@@ -59,6 +59,19 @@ position_transaction) as a
 WHERE a.account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37'
 ORDER BY name) as x;
 
+SELECT jsonb_agg(json_build_object) FROM 
+(SELECT json_build_object ('value', sum::Numeric, 'name', date) FROM(
+with data as (SELECT value, date FROM(
+SELECT account_uuid, amount as value, date
+FROM account_transaction
+UNION
+SELECT account_uuid, -1 * (price*quantity) as value, date FROM 
+position_transaction) as a
+WHERE a.account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37'
+ORDER BY date)
+SELECT date, sum (value) over (order by date asc rows between unbounded preceding and current row)
+FROM data) as x) as y
+
 
 -- Deposit history:
 SELECT date as name, amount as value
@@ -77,3 +90,18 @@ SELECT jsonb_agg((
 )
 FROM account_transaction
 WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37';
+
+-- THIS IS AMAZING< CUMULATIVE SUMMMS! -> For deposited balance
+with data as (SELECT date, amount::Numeric
+FROM account_transaction 
+WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37'
+ORDER BY date)
+SELECT date, sum (amount) over (order by date asc rows between unbounded preceding and current row)
+from data
+
+SELECT jsonb_agg(json_build_object) FROM (SELECT json_build_object('name', date, 'value', sum) from (with data as (SELECT date, amount::Numeric
+FROM account_transaction 
+WHERE account_uuid = '3d23e8c1-71f1-48f8-a323-60fd159f3c37'
+ORDER BY date)
+SELECT date, sum (amount) over (order by date asc rows between unbounded preceding and current row)
+FROM data) as x) as y
